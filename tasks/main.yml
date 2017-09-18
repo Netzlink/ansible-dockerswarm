@@ -42,6 +42,18 @@
     and ansible_python_version | version_compare('2.6.0', '>=')
     and ansible_python_version | version_compare('2.7.9', '<')
 
+- name: open docker swarm ports
+  firewalld:
+    permanent: true
+    immediate: true
+    port: "{{ item }}"
+    state: enabled
+  with_items:
+    - "{{ docker_swarm_port }}/tcp"
+    - 7946/udp
+    - 7946/tcp
+    - 4789/udp
+
 # Install the Docker Engine
 - include: docker_engine.yml
   when: not skip_engine
